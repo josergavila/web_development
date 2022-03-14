@@ -179,7 +179,7 @@ export default function Register() {
                   fullWidth
                   id="confirmPassword"
                   label="Confirme a Senha"
-                  inputProps={{ type: 'confirmPassword' }}
+                  inputProps={{ type: 'password' }}
                   error={Boolean(errors.confirmPassword)}
                   helperText={
                     errors.confirmPassword
