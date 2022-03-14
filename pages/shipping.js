@@ -1,15 +1,13 @@
 import {
   Button,
-  Link,
   List,
   ListItem,
   TextField,
   Typography,
 } from '@material-ui/core';
 import Cookies from 'js-cookie';
-import CheckoutWizard from '../components/checkoutWizard';
+import CheckoutWizard from '../components/CheckoutWizard';
 import Layout from '../components/Layout';
-import NextLink from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
 import { Store } from '../utils/Store';
 import useStyles from '../utils/styles';
@@ -24,7 +22,6 @@ export default function Shipping() {
     setValue,
   } = useForm();
   const router = useRouter();
-  const { redirect } = router.query;
   const { state, dispatch } = useContext(Store);
   const {
     userInfo,
@@ -58,7 +55,7 @@ export default function Shipping() {
 
   return (
     <Layout title="Endereço de Envio">
-      <CheckoutWizard actionStep={1} />
+      <CheckoutWizard activeStep={1} />
       <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
         <Typography component="h1" variant="h1">
           Endereço de Envio
