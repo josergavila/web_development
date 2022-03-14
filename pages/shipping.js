@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import Cookies from 'js-cookie';
+import CheckoutWizard from '../components/checkoutWizard';
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
@@ -40,22 +41,24 @@ export default function Shipping() {
     setValue('country', shippingAddress.country);
   }, []);
   const classes = useStyles();
-  const submitHandler = ({ fullName, addres, city, postalCode, country }) => {
+  const submitHandler = ({ fullName, address, city, postalCode, country }) => {
     dispatch({
       type: 'SAVE_SHIPPING_ADDRESS',
-      payload: { fullName, addres, city, postalCode, country },
+      payload: { fullName, address, city, postalCode, country },
     });
     Cookies.set('shippingAddress', {
       fullName,
-      addres,
+      address,
       city,
       postalCode,
       country,
     });
     router.push('/payment');
   };
+
   return (
     <Layout title="Endereço de Envio">
+      <CheckoutWizard actionStep={1} />
       <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
         <Typography component="h1" variant="h1">
           Endereço de Envio
@@ -77,7 +80,6 @@ export default function Shipping() {
                   fullWidth
                   id="fullName"
                   label="Nome Completo"
-                  inputProps={{ type: 'fullName' }}
                   error={Boolean(errors.fullName)}
                   helperText={
                     errors.fullName
@@ -107,7 +109,6 @@ export default function Shipping() {
                   fullWidth
                   id="address"
                   label="Endereço"
-                  inputProps={{ type: 'address' }}
                   error={Boolean(errors.address)}
                   helperText={
                     errors.address
@@ -137,7 +138,6 @@ export default function Shipping() {
                   fullWidth
                   id="city"
                   label="Cidade"
-                  inputProps={{ type: 'city' }}
                   error={Boolean(errors.city)}
                   helperText={
                     errors.city
@@ -167,7 +167,6 @@ export default function Shipping() {
                   fullWidth
                   id="postalCode"
                   label="CEP"
-                  inputProps={{ type: 'postalCode' }}
                   error={Boolean(errors.postalCode)}
                   helperText={
                     errors.postalCode
@@ -197,7 +196,6 @@ export default function Shipping() {
                   fullWidth
                   id="country"
                   label="País"
-                  inputProps={{ type: 'country' }}
                   error={Boolean(errors.country)}
                   helperText={
                     errors.country
