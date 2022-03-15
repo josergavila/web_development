@@ -30,9 +30,10 @@ export default function Payment() {
     if (!shippingAddress.address) {
       router.push('/shipping');
     } else {
+      console.log('here');
       setPaymentMethod(Cookies.get('paymentMethod') || '');
     }
-  });
+  }, []);
   const submitHandler = (e) => {
     closeSnackbar();
     e.preventDefault();
@@ -55,7 +56,7 @@ export default function Payment() {
           <ListItem>
             <FormControl component="fieldset">
               <RadioGroup
-                aria-label="Meio de Pagamento"
+                aria-label="Payment Method"
                 name="paymentMethod"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
