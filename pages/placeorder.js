@@ -65,8 +65,8 @@ function PlaceOrder() {
                 </Typography>
               </ListItem>
               <ListItem>
-                {shippingAddress.fullName}, {shippingAddress.address}, ,
-                {shippingAddress.city}, {shippingAddress.postalCode}, ,
+                {shippingAddress.fullName}, {shippingAddress.address},
+                {shippingAddress.city}, {shippingAddress.postalCode},
                 {shippingAddress.country}
               </ListItem>
             </List>

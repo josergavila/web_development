@@ -8,7 +8,7 @@ import {
 import Cookies from 'js-cookie';
 import CheckoutWizard from '../components/CheckoutWizard';
 import Layout from '../components/Layout';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Store } from '../utils/Store';
 import useStyles from '../utils/styles';
 import { useRouter } from 'next/router';
@@ -208,7 +208,7 @@ export default function Shipping() {
           </ListItem>
           <ListItem>
             <Button variant="contained" type="submit" fullWidth color="primary">
-              Próxima Etapa
+              Continuar
             </Button>
           </ListItem>
         </List>
