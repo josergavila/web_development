@@ -1,13 +1,12 @@
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Button,
   Card,
   Grid,
-  MenuItem,
   Link,
   List,
   ListItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -15,25 +14,26 @@ import {
   TableRow,
   Typography,
   TableContainer,
+  CircularProgress,
 } from '@material-ui/core';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
-import React, { useContext, useEffect } from 'react';
 import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
 import useStyles from '../utils/styles';
 import CheckoutWizard from '../components/CheckoutWizard';
-
-// NOTE: rendering cart in client side because of cookies (avoiding differences between
-// client side and server side) -> it does not matter for SEO anyway
+import { useSnackbar } from 'notistack';
+import { getError } from '../utils/error';
+import Cookies from 'js-cookie';
 
 function PlaceOrder() {
   const classes = useStyles();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
+    userInfo,
     cart: { cartItems, shippingAddress, paymentMethod },
   } = state;
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
@@ -46,7 +46,42 @@ function PlaceOrder() {
     if (!paymentMethod) {
       router.push('/payment');
     }
+    if (cartItems.length === 0) {
+      router.push('/cart');
+    }
   }, []);
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+  const placeOrderHandler = async () => {
+    closeSnackbar();
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        '/api/orders',
+        {
+          orderOItems: cartItems,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          totalPrice,
+        },
+        {
+          header: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      dispatch({ type: 'CART_CLEAR' });
+      Cookies.remove('cartItems');
+      setLoading(false);
+      router.push(`/order/${data._id}`);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
 
   return (
     <Layout title="seu carrinho">
@@ -176,10 +211,20 @@ function PlaceOrder() {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button
+                  onClick={placeOrderHandler}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
                   Finalize a Compra
                 </Button>
               </ListItem>
+              {loading && (
+                <ListItem>
+                  <CircularProgress />
+                </ListItem>
+              )}
             </List>
           </Card>
         </Grid>
